@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Commander</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  </head>
+  <body>
+    <ul>
+      <li><a href="http://google.com">Google</a></li>
+      <li><a href="http://github.com">GitHub</a></li>
+      <li><a href="http://hashrocket.com">Hashrocket</a></li>
+    </ul>
+
+    <script>
+      var webSocket = new WebSocket('ws://localhost:8080/browse');
+
+      webSocket.onopen = function(event){
+        webSocket.send('commander');
+      };
+
+      $("a").click(function(){
+        webSocket.send($(this).attr('href'));
+        return false;
+      });
+    </script>
+  </body>
+</html>

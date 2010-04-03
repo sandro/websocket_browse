@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Commander</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <style type="text/css">
+      h1 {
+        font-size: 150px;
+        font-family: "Helvetica Neue";
+        text-align: center;
+      }
+      iframe {
+        border: none;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe src=""></iframe>
+
+    <script>
+      var webSocket = new WebSocket('ws://localhost:8080/browse');
+      var iframe = $('iframe');
+
+      iframe.load(function(){
+        iframe.show();
+        $('h1').remove();
+      });
+
+      iframe.bind('newPage', function(event) {
+        iframe.hide();
+        iframe.attr('src', event.src);
+        iframe.before('<h1>Loading...</h1>');
+      });
+
+      webSocket.onopen = function(event){
+        webSocket.send('browser');
+      };
+
+      webSocket.onmessage = function(event) {
+        iframe.trigger({type: 'newPage', src : event.data});
+      };
+    </script>
+  </body>
+</html>
